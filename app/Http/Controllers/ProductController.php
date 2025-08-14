@@ -18,7 +18,7 @@ class ProductController extends Controller
         return view('products.index',compact('products','categories'));
     }
 
-    public function productsAtCategory($id=-1,$name='',$quantity=-1,$price=-1){
+    public function productsAtCategory($id){
         $categories=Category::all();
         $products=Product::with('category')->where('category_id',$id)->get();
         return view('products.index',compact('products','categories'));

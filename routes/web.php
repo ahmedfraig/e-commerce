@@ -19,7 +19,6 @@ Route::get('/', function () {
 Route::middleware(['auth',AdminMiddleWare::class])->group(function(){
 Route::get('/dashboard/main',[DashboardController::class,'view'])->name('dashboard.view');
 Route::resource('dashboard',DashboardController::class);
-Route::resource('cart',CartController::class);
 Route::resource('category',CategoryController::class);
 Route::resource('order',OrderController::class);
 Route::resource('orderItem',OrderItemController::class);
@@ -29,7 +28,9 @@ Route::resource('product',ProductController::class);
 
 });
 //themeFront
-Route::get('theme/front', [HomeController::class,'index'])->name('Home.front');
+Route::get('theme/front/category/{id}', [HomeController::class, 'productsAtCategory'])->name('home.byCategory');
+Route::get('theme/front', [HomeController::class,'index'])->name('home.index');
+Route::resource('cart',CartController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

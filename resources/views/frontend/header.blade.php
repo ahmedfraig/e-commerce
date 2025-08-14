@@ -1,3 +1,9 @@
+ <style>
+.cart-icon:hover i {
+    color: black !important;
+}
+</style>
+ 
  <header class="header_section">
      <div class="container">
          <nav class="navbar navbar-expand-lg custom_nav-container ">
@@ -10,7 +16,7 @@
              <div class="collapse navbar-collapse" id="navbarSupportedContent">
                  <ul class="navbar-nav">
                      <li class="nav-item active">
-                         <a class="nav-link" href="{{ url('/') }}">Home <span class="sr-only">(current)</span></a>
+                         <a class="nav-link" href="{{ url('/theme/front') }}">Home <span class="sr-only">(current)</span></a>
                      </li>
                      <li class="nav-item dropdown">
                          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button"
@@ -70,8 +76,10 @@
                          </button>
                      </form>
                  </ul>
-             </div>
 
+             </div>
          </nav>
+         <a href="{{ route('cart.index') }}" class="cart-icon" style="position:absolute; display:inline-block;top:1.6%;right:7%;">
+                                <i class="fa fa-shopping-cart" style="font-size:50px;color:red"></i></a>
      </div>
  </header>
