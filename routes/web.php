@@ -28,6 +28,9 @@ Route::resource('product',ProductController::class);
 
 });
 //themeFront
+// Public safe route (auth optional)
+Route::get('product/{product}', [ProductController::class, 'view'])->name('product.view');
+
 Route::get('theme/front/category/{id}', [HomeController::class, 'productsAtCategory'])->name('home.byCategory');
 Route::get('theme/front', [HomeController::class,'index'])->name('home.index');
 Route::resource('cart',CartController::class);

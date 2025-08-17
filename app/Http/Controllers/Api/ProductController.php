@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\Category;
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -13,44 +13,31 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $categories=Category::all();
-        $products=Product::with('category')->get();
-        return view('products.index',compact('products','categories'));
-    }
-
-    public function productsAtCategory($id){
-        $categories=Category::all();
-        $products=Product::with('category')->where('category_id',$id)->get();
-        return view('products.index',compact('products','categories'));
-    }
-    
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $categories=Category::all();
-        return view('products.create',compact('categories'));
+        $products = Product::with('category')->get();
+        return response()->json(
+            [
+                'status' => true,
+                'date' =>$products
+            ],200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+        {
         $request->validate([
             'name'=>'required|string|max:255', 
             'price'=>'required|numeric|min:0',
             'quantity'=>'required|integer',
-            'image'=>'required|file|mimes:jpeg,png,pdf,docx',
+            'image'=>'file|mimes:jpeg,png,pdf,docx,jpg',
             'category_id'=>'required',
             'description'=>'required|string'
         ]);
 
         $imageName=time().'.'.$request->image->getClientOriginalExtension();
         $request->image->move(public_path('uploads'),$imageName);
-        Product::create([
+        $product = Product::create([
             'name'=>$request->name, 
             'price'=>$request->price,
             'quantity'=>$request->quantity,
@@ -58,31 +45,46 @@ class ProductController extends Controller
             'image'=>$imageName,
             'description'=>$request->description
         ]);
-        return redirect()->route('product.index')->with('success','Product added successfully');
+        return response()->json([
+            'status' => true,
+            'message' =>'Product created successfully',
+            'data' =>$product
+        ],201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
+    public function show($id)
     {
-        //
+        $product = Product::with('category')->find($id);
+
+        if(!$product){
+            return response()->json([
+                'status' => false,
+                'message' => 'Product not found'
+            ],404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $product
+        ], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Product $product)
-    {
-        $categories=Category::all();
-        return view('products.edit',compact('product','categories'));
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, string $id)
     {
+        $request->validate([
+                    'name'=>'required|string|max:255', 
+                    'price'=>'required|numeric|min:0',
+                    'quantity'=>'required|integer',
+                    'image'=>'file|mimes:jpeg,png,pdf,docx,jpg',
+                    'category_id'=>'required',
+                    'description'=>'required|string'
+                ]);
+
+        $product = Product::with('category')->find($id);
         if($request->hasFile('image')){
 
             if($product->image && file_exists(public_path('uploads/'.'.'.$product->image)))
@@ -105,15 +107,17 @@ class ProductController extends Controller
             'image'=>$imageName,
             'description'=>$request->description            
         ]);
-        return redirect()->route('product.index')->with('success','Product updated successfully');
+        return response()->json([
+            'status' => true,
+            'data' => $product
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(string $id)
     {
-        $product->delete();
-        return redirect()->route('product.index')->with('success','Product deleted successfully');
+        //
     }
 }
