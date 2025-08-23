@@ -18,7 +18,7 @@
         <div class="card shadow-sm border-0 rounded">
             <div class="card-body">
                 <div class="table-responsive" style="overflow: visible !important;">
-                    <table class="table table-bordered table-hover align-middle">
+                    <table class="table table-bordered table-hover align-middle text-center">
                         <thead class="table-dark">
                             <tr>
                                 <th>#</th>
